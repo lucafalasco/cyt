@@ -1,0 +1,37 @@
+{
+  "name": "54705h1n37",
+  "version": "1.0.0",
+  "author": "Luca Falasco <falasco.luca@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucafalasco/54705h1n37.git"
+  },
+  "scripts": {
+    "start": "accurapp-scripts start",
+    "build": "accurapp-scripts build"
+  },
+  "devDependencies": {
+    "accurapp-scripts": "^3.1.2",
+    "eslint-config-accurapp": "^3.0.0",
+    "webpack-preset-accurapp": "^3.0.1"
+  },
+  "dependencies": {
+    "d3-geo": "^1.6.4",
+    "d3-scale": "^1.0.6",
+    "d3-selection": "^1.1.0",
+    "d3-transition": "^1.1.0",
+    "fetch": "^1.1.0",
+    "geoip-lite": "^1.2.1",
+    "lodash": "^4.17.4",
+    "mobx": "^3.1.15",
+    "mobx-react": "^4.2.1",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-addons-transition-group": "^15.6.0",
+    "react-dom": "^15.6.1",
+    "react-tooltip": "^3.3.0",
+    "tachyons": "^4.7.4",
+    "topojson-client": "^3.0.0"
+  }
+}
