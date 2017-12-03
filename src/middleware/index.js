@@ -1,6 +1,6 @@
 import appState from '../state'
 
-const WS_URI = 'wss://ws.blockchain.info/inv'
+const WS_URI = 'wss://socket.blockcypher.com/v1/btc/main'
 const websocket = new window.WebSocket(WS_URI)
 const data = []
 
@@ -18,7 +18,7 @@ function addGeoData(data) {
 
 function onOpen(evt) {
   console.log('CONNECTED')
-  websocket.send(JSON.stringify({ op: 'unconfirmed_sub' }))
+  websocket.send(JSON.stringify({ event: 'unconfirmed-tx' }))
 }
 
 function onClose(evt) {
@@ -28,13 +28,19 @@ function onClose(evt) {
 
 function onMessage(evt) {
   const json = JSON.parse(evt.data)
+
+  const relayedByIp = json.relayed_by.split(':')[0]
+
+  // if returned ip is localhost, then it's blockchain.info ip
+  const ip = relayedByIp !== '127.0.0.1' ? relayedByIp : '104.16.55.3'
+
   const transactionData = {
-    ip: json.x.relayed_by !== '127.0.0.1' ? json.x.relayed_by : '104.16.55.3', // if returned ip is localhost, then it's blockchain.info ip
-    value: json.x.out.reduce(function (a, b) {
+    ip,
+    value: json.outputs.reduce(function (a, b) {
       return a + b.value / 1e8
     }, 0),
-    size: json.x.size,
-    hash: json.x.hash,
+    size: json.size,
+    hash: json.hash,
   }
   const url = '//freegeoip.net/json/' + transactionData.ip
 
