@@ -1,15 +1,15 @@
 {
-  "name": "54705h1n37",
+  "name": "cryptiz",
   "version": "1.0.0",
   "author": "Luca Falasco <falasco.luca@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lucafalasco/54705h1n37.git"
+    "url": "https://github.com/lucafalasco/cryptiz.git"
   },
   "scripts": {
     "start": "accurapp-scripts start",
-    "build": "accurapp-scripts build"
+    "build": "PUBLIC_URL=cryptiz accurapp-scripts build"
   },
   "devDependencies": {
     "accurapp-scripts": "^3.1.2",

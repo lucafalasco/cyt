@@ -1,6 +1,6 @@
-# 54705h1n37
+# cryptiz
 
-54705h1n37 is a real time visualization of Bitcoin transactions all over the world.
+cryptiz is a real time visualization of Bitcoin transactions all over the world.
 
 Data is retrieved and sent to the application through the blockchain.info [WebSocket API](https://blockchain.info/api/api_websocket).
 
