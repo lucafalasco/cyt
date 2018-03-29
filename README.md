@@ -2,7 +2,7 @@
 
 cryptiz is a real time visualization of Bitcoin transactions all over the world.
 
-Data is retrieved and sent to the application through the blockchain.info [WebSocket API](https://blockchain.info/api/api_websocket).
+Data is retrieved and sent to the application through the BlockCypher [WebSocket API](https://blockcypher.github.io/documentation/#websocket_webhook).
 
 Transactions are represented with circles, the bigger the circle, the larger the amount of bitcoin exchanged.
 
