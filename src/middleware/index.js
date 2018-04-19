@@ -1,8 +1,40 @@
-import appState from '../state'
+import state from '../state'
+import { tickerByAsset } from 'coinmarketcap'
 
-const WS_URI = 'wss://socket.blockcypher.com/v1/btc/main'
-const websocket = new window.WebSocket(WS_URI)
-const data = []
+const COINS = [
+  {
+    codeName: 'btc',
+    fullName: 'bitcoin',
+  },
+  {
+    codeName: 'ltc',
+    fullName: 'litecoin',
+  },
+  {
+    codeName: 'dash',
+    fullName: 'dash',
+  },
+  {
+    codeName: 'doge',
+    fullName: 'dogecoin',
+  },
+]
+
+const chains = COINS.map(coin => ({
+  coin: coin.codeName,
+  ws: new window.WebSocket(`wss://socket.blockcypher.com/v1/${coin.codeName}/main`),
+}))
+
+const converts = {}
+const data = {}
+COINS.forEach(coin => (data[coin.codeName] = []))
+
+async function getConverts() {
+  COINS.forEach(async coin => {
+    const value = await tickerByAsset(coin.fullName, { convert: 'eur' })
+    converts[coin.codeName] = value
+  })
+}
 
 function addGeoData(data) {
   return {
@@ -16,29 +48,31 @@ function addGeoData(data) {
   }
 }
 
-function onOpen(evt) {
+async function onOpen(ws, evt) {
   console.log('CONNECTED')
-  websocket.send(JSON.stringify({ event: 'unconfirmed-tx' }))
+  await getConverts()
+  ws.send(JSON.stringify({ event: 'unconfirmed-tx' }))
 }
 
-function onClose(evt) {
+function onClose(ws, evt) {
   console.log('DISCONNECTED')
-  websocket.close()
+  ws.close()
 }
 
-function onMessage(evt) {
+function onMessage(coin, evt) {
   const json = JSON.parse(evt.data)
 
-  const relayedByIp = json.relayed_by.split(':')[0]
+  const relayedByIp = json.relayed_by ? json.relayed_by.split(':')[0] : '0.0.0.0'
 
-  // if returned ip is localhost, then it's blockchain.info ip
+  // if returned ip is localhost, then it's blockcypher ip
   const ip = relayedByIp !== '127.0.0.1' ? relayedByIp : '104.16.55.3'
+
+  const amount = json.total / 1e8
 
   const transactionData = {
     ip,
-    value: json.outputs.reduce(function (a, b) {
-      return a + b.value / 1e8
-    }, 0),
+    value: amount,
+    valueUSD: converts[coin].price_usd * amount,
     size: json.size,
     hash: json.hash,
   }
@@ -46,19 +80,19 @@ function onMessage(evt) {
 
   window
     .fetch(url)
-    .then(function (response) {
+    .then(response => {
       if (response.status >= 400) {
         throw new Error('Bad response from server')
       }
       return response.json()
     })
-    .then(function (geoData) {
+    .then(geoData => {
       const transaction = transactionData::addGeoData(geoData)
-      if (data.length > 50) {
-        data.shift()
+      if (data[coin].length > 50) {
+        data[coin].shift()
       }
-      data.push(transaction)
-      appState.updateWsData(data)
+      data[coin].push(transaction)
+      state.updateWsData(data)
       return geoData
     })
     .catch(errors => {
@@ -66,19 +100,21 @@ function onMessage(evt) {
     })
 }
 
-function onError(evt) {
-  console.error('Error retrieving data: ', evt.data)
+function onError(coin, evt) {
+  console.error(`Error retrieving data for coin ${coin}: ${evt.data}`)
 }
 
-websocket.onopen = function (evt) {
-  onOpen(evt)
-}
-websocket.onclose = function (evt) {
-  onClose(evt)
-}
-websocket.onmessage = function (evt) {
-  onMessage(evt)
-}
-websocket.onerror = function (evt) {
-  onError(evt)
-}
+chains.forEach(chain => {
+  chain.ws.onopen = evt => {
+    onOpen(chain.ws, evt)
+  }
+  chain.ws.onclose = evt => {
+    onClose(chain.ws, evt)
+  }
+  chain.ws.onmessage = evt => {
+    onMessage(chain.coin, evt)
+  }
+  chain.ws.onerror = evt => {
+    onError(chain.coin, evt)
+  }
+})

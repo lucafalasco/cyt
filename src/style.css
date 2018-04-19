@@ -1,10 +1,13 @@
-html, body, svg, #root {
+html,
+body,
+svg,
+#root {
   width: 100%;
   height: 100%;
   position: fixed;
   font-family: 'Roboto Mono', monospace;
-  background-color: #181818;
 }
+
 .tooltip {
   opacity: 0.9 !important;
   border-radius: 0 !important;

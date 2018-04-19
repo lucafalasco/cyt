@@ -18,10 +18,9 @@ export default class GeoPath extends React.Component {
       <path
         style={{
           fill: color,
-          stroke: color,
-          strokeWidth: 0.5,
-          transition: 'fill 1s',
         }}
+        stroke={color}
+        strokeWidth={1}
         id={data.id}
         d={generateGeoPath(data)}
       />

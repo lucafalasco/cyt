@@ -14,8 +14,8 @@ class Store {
   })
 }
 
-const appState = new Store()
+const state = new Store()
 
-window.addEventListener('resize', () => appState.handleResize())
+window.addEventListener('resize', () => state.handleResize())
 
-export default appState
+export default state

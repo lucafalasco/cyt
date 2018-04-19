@@ -10,7 +10,7 @@ export default class Circle extends React.Component {
     radius: PropTypes.number.isRequired,
     color: PropTypes.string,
     hash: PropTypes.string,
-    opacify: PropTypes.bool,
+    transparent: PropTypes.bool,
     interactionIsActive: PropTypes.bool,
     onHover: PropTypes.func,
   }
@@ -19,13 +19,20 @@ export default class Circle extends React.Component {
     const { radius } = this.props
     const selection = select(this._circle)
 
-    selection.transition().duration(500).attr('r', radius)
+    selection
+      .transition()
+      .duration(500)
+      .attr('r', radius)
   }
 
   componentWillLeave(callback) {
     const selection = select(this._circle)
 
-    selection.transition().duration(500).attr('r', 0).on('end', callback)
+    selection
+      .transition()
+      .duration(500)
+      .attr('r', 0)
+      .on('end', callback)
   }
 
   onInteractionStart = () => {
@@ -37,20 +44,21 @@ export default class Circle extends React.Component {
   }
 
   openExternalLink = () => {
-    window.open('https://live.blockcypher.com/btc/tx/' + this.props.hash)
+    window.open(`https://live.blockcypher.com/${this.props.coin}/tx/${this.props.hash}`)
   }
 
   render() {
-    const { hash, color, cx, cy, opacify, interactionIsActive } = this.props
+    const { hash, color, exceed, cx, cy, transparent, interactionIsActive } = this.props
 
     return (
       <circle
         data-for={hash}
         data-tip
-        className={`o-${opacify ? 80 : interactionIsActive ? 10 : 60}`}
-        fill={opacify ? 'transparent' : color}
+        className={`o-${transparent ? 80 : interactionIsActive ? 10 : 80} pointer`}
+        fill={transparent ? 'transparent' : color}
         stroke={color}
-        strokeWidth="2"
+        strokeDasharray={exceed && [2, 5]}
+        strokeWidth={exceed ? 10 : 3}
         cx={cx}
         cy={cy}
         r={0}

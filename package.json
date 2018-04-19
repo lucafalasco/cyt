@@ -17,6 +17,7 @@
     "webpack-preset-accurapp": "^3.0.1"
   },
   "dependencies": {
+    "coinmarketcap": "^0.2.0",
     "d3-geo": "^1.6.4",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
