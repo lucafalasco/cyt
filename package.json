@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "accurapp-scripts start",
-    "build": "PUBLIC_URL=cryptiz accurapp-scripts build"
+    "build": "PUBLIC_URL=/cryptiz accurapp-scripts build"
   },
   "browserslist": {
     "production": [
