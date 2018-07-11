@@ -11,26 +11,39 @@
     "start": "accurapp-scripts start",
     "build": "PUBLIC_URL=cryptiz accurapp-scripts build"
   },
+  "browserslist": {
+    "production": [
+      ">0.25%",
+      "not ie 11",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 Chrome version"
+    ]
+  },
+  "resolutions": {
+    "**/file-loader": "1.1.11"
+  },
   "devDependencies": {
-    "accurapp-scripts": "^3.1.2",
-    "eslint-config-accurapp": "^3.0.0",
-    "webpack-preset-accurapp": "^3.0.1"
+    "accurapp-scripts": "4.0.0-beta.13",
+    "babel-preset-accurapp": "4.0.0-beta.13",
+    "eslint-config-accurapp": "4.1.0-beta.13",
+    "webpack-preset-accurapp": "4.0.0-beta.13"
   },
   "dependencies": {
     "coinmarketcap": "^0.2.0",
     "d3-geo": "^1.6.4",
-    "d3-scale": "^1.0.6",
+    "d3-scale": "^2.1.0",
     "d3-selection": "^1.1.0",
     "d3-transition": "^1.1.0",
     "fetch": "^1.1.0",
-    "geoip-lite": "^1.2.1",
     "lodash": "^4.17.4",
-    "mobx": "^3.1.15",
-    "mobx-react": "^4.2.1",
+    "mobx": "^5.0.3",
+    "mobx-react": "^5.2.3",
     "prop-types": "^15.5.10",
-    "react": "^15.6.1",
+    "react": "^16.4.1",
     "react-addons-transition-group": "^15.6.0",
-    "react-dom": "^15.6.1",
+    "react-dom": "^16.4.1",
     "react-tooltip": "^3.3.0",
     "tachyons": "^4.7.4",
     "topojson-client": "^3.0.0"

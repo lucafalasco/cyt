@@ -13,8 +13,8 @@ import { ReactComponent as Octocat } from '../assets/octocat.svg'
 import worldMap from '../lib/world-map.json'
 import { COINS_COLORS } from '../constants'
 
-import GeoPath from '../components/geo-path'
-import Circle from '../components/circle'
+import GeoPath from '../components/GeoPath'
+import Circle from '../components/Circle'
 
 const USDFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -38,8 +38,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { wsData: data } = this.props.state
-    const { width, height } = this.props.state
+    const { coinsData, width, height } = this.props.state
     const { focusedTransaction } = this.state
 
     const interactionIsActive = Boolean(focusedTransaction)
@@ -47,7 +46,7 @@ export default class App extends React.Component {
     const geojson = feature(worldMap, worldMap.objects.countries).features
 
     const projection = geoEquirectangular()
-      .scale(width / 640 * 100)
+      .scale((width / 640) * 100)
       .translate([width / 2, height / 2])
 
     const maxUSD = 100000
@@ -68,29 +67,33 @@ export default class App extends React.Component {
       />
     ))
 
-    const ripples = map(data, (data, coin) => {
+    const ripples = map(coinsData, (data, coin) => {
       const transactionData = sortBy(data, d => d.value).reverse()
-      return transactionData.map(({ hash, longitude, latitude, value, valueUSD }) => (
-        <Circle
-          key={hash}
-          cx={projection([longitude, latitude])[0]}
-          cy={projection([longitude, latitude])[1]}
-          radius={radiusScale(valueUSD)}
-          exceed={valueUSD > maxUSD}
-          hash={hash}
-          coin={coin}
-          interactionIsActive={interactionIsActive}
-          transparent={focusedTransaction === hash}
-          onHover={this.handleHovering}
-          color={COINS_COLORS[coin]}
-        />
-      ))
+      return transactionData.map(({ hash, longitude, latitude, value, valueUSD }) => {
+        return (
+          <Circle
+            key={hash}
+            cx={projection([longitude, latitude])[0]}
+            cy={projection([longitude, latitude])[1]}
+            radius={radiusScale(valueUSD)}
+            exceed={valueUSD > maxUSD}
+            hash={hash}
+            coin={coin}
+            interactionIsActive={interactionIsActive}
+            transparent={focusedTransaction === hash}
+            onHover={this.handleHovering}
+            color={COINS_COLORS[coin]}
+          />
+        )
+      })
     })
 
-    const tooltips = map(data, (data, coin) => {
+    const tooltips = map(coinsData, (data, coin) => {
       const transactionData = sortBy(data, d => d.value).reverse()
       return transactionData.map(({ hash, ip, city, region, country, size, value, valueUSD }) => (
-        <ReactTooltip class="tooltip" key={hash} id={hash} type="dark" effect="float" place="left">
+        <ReactTooltip
+          class="tooltip" key={hash} id={hash} type="dark" effect="float"
+          place="left">
           <div style={{ color: COINS_COLORS[coin] }}>
             <div>
               <b>Hash:</b> {hash}
@@ -100,8 +103,8 @@ export default class App extends React.Component {
             </div>
             <div>
               <b>Location: </b>
-              {city ? city + ', ' : ''}
-              {region && region !== city ? region + ', ' : ''}
+              {city ? `${city}, ` : ''}
+              {region && region !== city ? `${region}, ` : ''}
               {country}
             </div>
             <div>
@@ -120,7 +123,7 @@ export default class App extends React.Component {
 
     return (
       <div className="w-100 h-100 bg-black">
-        <div className="w-100 h-100" ref="_chart">
+        <div className="w-100 h-100">
           <svg>
             <g className="map">{path}</g>
             <ReactTransitionGroup component="g" className="transactions">

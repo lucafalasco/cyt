@@ -57,7 +57,7 @@ export default class Circle extends React.Component {
         className={`o-${transparent ? 80 : interactionIsActive ? 10 : 80} pointer`}
         fill={transparent ? 'transparent' : color}
         stroke={color}
-        strokeDasharray={exceed && [2, 5]}
+        strokeDasharray={exceed ? [2, 5] : 0}
         strokeWidth={exceed ? 10 : 3}
         cx={cx}
         cy={cy}
