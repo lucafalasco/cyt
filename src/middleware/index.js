@@ -1,5 +1,6 @@
-import state from '../state'
 import { tickerByAsset } from 'coinmarketcap'
+import state from '../state'
+require('dotenv').config()
 
 const COINS = [
   {
@@ -26,8 +27,8 @@ const chains = COINS.map(coin => ({
 }))
 
 const converts = {}
-const data = {}
-COINS.forEach(coin => (data[coin.codeName] = []))
+const coinsData = {}
+COINS.forEach(coin => (coinsData[coin.codeName] = []))
 
 async function getConverts() {
   COINS.forEach(async coin => {
@@ -36,17 +37,15 @@ async function getConverts() {
   })
 }
 
-function addGeoData(data) {
-  return {
-    ...this,
-    longitude: data.longitude,
-    latitude: data.latitude,
-    city: data.city,
-    region: data.region_name,
-    country: data.country_name,
-    countryCode: data.country_code,
-  }
-}
+const withGeoData = (transactionData, data) => ({
+  ...transactionData,
+  longitude: data.longitude,
+  latitude: data.latitude,
+  city: data.city,
+  region: data.region_name,
+  country: data.country_name,
+  countryCode: data.country_code,
+})
 
 async function onOpen(ws, evt) {
   console.log('CONNECTED')
@@ -76,7 +75,9 @@ function onMessage(coin, evt) {
     size: json.size,
     hash: json.hash,
   }
-  const url = '//freegeoip.net/json/' + transactionData.ip
+  const url = `http://api.ipstack.com/${transactionData.ip}?access_key=${
+    process.env.IPSTACK_ACCESS_KEY
+  }`
 
   window
     .fetch(url)
@@ -87,12 +88,12 @@ function onMessage(coin, evt) {
       return response.json()
     })
     .then(geoData => {
-      const transaction = transactionData::addGeoData(geoData)
-      if (data[coin].length > 50) {
-        data[coin].shift()
+      const transaction = withGeoData(transactionData, geoData)
+      if (coinsData[coin].length > 50) {
+        coinsData[coin].shift()
       }
-      data[coin].push(transaction)
-      state.updateWsData(data)
+      coinsData[coin].push(transaction)
+      state.updateCoinsData(coinsData)
       return geoData
     })
     .catch(errors => {
