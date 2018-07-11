@@ -8,6 +8,7 @@ import ReactTooltip from 'react-tooltip'
 import { geoEquirectangular } from 'd3-geo'
 import { scaleLinear } from 'd3-scale'
 import { feature } from 'topojson-client'
+import { ReactComponent as Octocat } from '../assets/octocat.svg'
 
 import worldMap from '../lib/world-map.json'
 import { COINS_COLORS } from '../constants'
@@ -127,6 +128,13 @@ export default class App extends React.Component {
             </ReactTransitionGroup>
           </svg>
           <div>{tooltips}</div>
+          <a
+            href="https://github.com/lucafalasco/cryptiz"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Octocat fill="white" className="absolute top-1 left-1 w2 h2" />
+          </a>
         </div>
       </div>
     )
