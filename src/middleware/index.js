@@ -75,7 +75,7 @@ function onMessage(coin, evt) {
     size: json.size,
     hash: json.hash,
   }
-  const url = `https://api.ipstack.com/${transactionData.ip}?access_key=${
+  const url = `http://api.ipstack.com/${transactionData.ip}?access_key=${
     process.env.IPSTACK_ACCESS_KEY
   }`
 
