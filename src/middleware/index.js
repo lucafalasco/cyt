@@ -1,6 +1,5 @@
 import { tickerByAsset } from 'coinmarketcap'
 import state from '../state'
-require('dotenv').config()
 
 const COINS = [
   {
@@ -39,12 +38,11 @@ async function getConverts() {
 
 const withGeoData = (transactionData, data) => ({
   ...transactionData,
-  longitude: data.longitude,
-  latitude: data.latitude,
+  longitude: data.location.longitude,
+  latitude: data.location.latitude,
   city: data.city,
-  region: data.region_name,
-  country: data.country_name,
-  countryCode: data.country_code,
+  country: data.country.name,
+  countryCode: data.country.code,
 })
 
 async function onOpen(ws, evt) {
@@ -75,9 +73,8 @@ function onMessage(coin, evt) {
     size: json.size,
     hash: json.hash,
   }
-  const url = `http://api.ipstack.com/${transactionData.ip}?access_key=${
-    process.env.IPSTACK_ACCESS_KEY
-  }`
+
+  const url = `https://geoip.nekudo.com/api/${transactionData.ip}`
 
   window
     .fetch(url)

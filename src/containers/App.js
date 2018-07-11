@@ -90,7 +90,7 @@ export default class App extends React.Component {
 
     const tooltips = map(coinsData, (data, coin) => {
       const transactionData = sortBy(data, d => d.value).reverse()
-      return transactionData.map(({ hash, ip, city, region, country, size, value, valueUSD }) => (
+      return transactionData.map(({ hash, ip, city, country, size, value, valueUSD }) => (
         <ReactTooltip
           class="tooltip" key={hash} id={hash} type="dark" effect="float"
           place="left">
@@ -104,7 +104,6 @@ export default class App extends React.Component {
             <div>
               <b>Location: </b>
               {city ? `${city}, ` : ''}
-              {region && region !== city ? `${region}, ` : ''}
               {country}
             </div>
             <div>
