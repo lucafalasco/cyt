@@ -6,23 +6,24 @@ const COINS = [
     codeName: 'btc',
     fullName: 'bitcoin',
   },
-  {
-    codeName: 'ltc',
-    fullName: 'litecoin',
-  },
-  {
-    codeName: 'dash',
-    fullName: 'dash',
-  },
-  {
-    codeName: 'doge',
-    fullName: 'dogecoin',
-  },
+  // {
+  //   codeName: 'ltc',
+  //   fullName: 'litecoin',
+  // },
+  // {
+  //   codeName: 'dash',
+  //   fullName: 'dash',
+  // },
+  // {
+  //   codeName: 'doge',
+  //   fullName: 'dogecoin',
+  // },
 ]
 
 const chains = COINS.map(coin => ({
   coin: coin.codeName,
-  ws: new window.WebSocket(`wss://socket.blockcypher.com/v1/${coin.codeName}/main`),
+  ws: new window.WebSocket('wss://ws.blockchain.info/inv'),
+  // ws: new window.WebSocket(`wss://socket.blockcypher.com/v1/${coin.codeName}/main`),
 }))
 
 const converts = {}
@@ -48,7 +49,8 @@ const withGeoData = (transactionData, data) => ({
 async function onOpen(ws, evt) {
   console.log('CONNECTED')
   await getConverts()
-  ws.send(JSON.stringify({ event: 'unconfirmed-tx' }))
+  ws.send(JSON.stringify({ op: 'unconfirmed_sub' }))
+  // ws.send(JSON.stringify({ event: 'unconfirmed-tx' }))
 }
 
 function onClose(ws, evt) {
@@ -59,19 +61,26 @@ function onClose(ws, evt) {
 function onMessage(coin, evt) {
   const json = JSON.parse(evt.data)
 
-  const relayedByIp = json.relayed_by ? json.relayed_by.split(':')[0] : '0.0.0.0'
+  // const relayedByIp = json.relayed_by ? json.relayed_by.split(':')[0] : '0.0.0.0'
 
   // if returned ip is localhost, then it's blockcypher ip
-  const ip = relayedByIp !== '127.0.0.1' ? relayedByIp : '104.16.55.3'
+  // const ip = relayedByIp !== '127.0.0.1' ? relayedByIp : '104.16.55.3'
+  // const amount = json.total / 1e8
 
-  const amount = json.total / 1e8
+  // if returned ip is localhost, then it's blockchain.info ip
+  const ip = json.x.relayed_by !== '127.0.0.1' ? json.x.relayed_by : '104.16.55.3'
+  const amount = json.x.out.reduce((a, b) => {
+    return a + b.value / 1e8
+  }, 0)
 
   const transactionData = {
     ip,
     value: amount,
     valueUSD: converts[coin].price_usd * amount,
-    size: json.size,
-    hash: json.hash,
+    size: json.x.size,
+    hash: json.x.hash,
+    // size: json.size,
+    // hash: json.hash,
   }
 
   const url = `https://geoip.nekudo.com/api/${transactionData.ip}`

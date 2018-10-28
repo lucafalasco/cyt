@@ -44,7 +44,8 @@ export default class Circle extends React.Component {
   }
 
   openExternalLink = () => {
-    window.open(`https://live.blockcypher.com/${this.props.coin}/tx/${this.props.hash}`)
+    // window.open(`https://live.blockcypher.com/${this.props.coin}/tx/${this.props.hash}`)
+    window.open(`https://blockchain.info/tx/ ${this.props.hash}`)
   }
 
   render() {
