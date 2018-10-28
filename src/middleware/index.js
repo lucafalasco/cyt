@@ -1,5 +1,6 @@
 import { tickerByAsset } from 'coinmarketcap'
 import state from '../state'
+import { IPAPI_API_KEY } from '../constants'
 
 const COINS = [
   {
@@ -39,11 +40,11 @@ async function getConverts() {
 
 const withGeoData = (transactionData, data) => ({
   ...transactionData,
-  longitude: data.location.longitude,
-  latitude: data.location.latitude,
+  longitude: data.longitude,
+  latitude: data.latitude,
   city: data.city,
-  country: data.country.name,
-  countryCode: data.country.code,
+  country: data.country_name,
+  countryCode: data.country_code,
 })
 
 async function onOpen(ws, evt) {
@@ -83,7 +84,7 @@ function onMessage(coin, evt) {
     // hash: json.hash,
   }
 
-  const url = `https://geoip.nekudo.com/api/${transactionData.ip}`
+  const url = `http://api.ipapi.com/${transactionData.ip}?access_key=${IPAPI_API_KEY}`
 
   window
     .fetch(url)
