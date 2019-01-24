@@ -1,8 +1,8 @@
-# cryptiz
+# CYT
 
 #### ⚠️ could be currently broken due to an [issue](https://github.com/blockcypher/explorer/issues/248) with BlockCypher WS API
 
-cryptiz is a real time visualization of Bitcoin, Litecoin, Dash and Dogecoin transactions all over the world.
+CYT is a real time visualization of Bitcoin, Litecoin, Dash and Dogecoin transactions all over the world.
 
 Data is retrieved and sent to the application through the BlockCypher [WebSocket API](https://blockcypher.github.io/documentation/#websocket_webhook).
 
@@ -38,8 +38,8 @@ Bundled files can be found in `build/`
 
 ## Resources
 
-* [BlockCypher](https://www.blockcypher.com/)
-* [React](https://facebook.github.io/react/)
-* [D3](https://d3js.org/)
-* [MobX](https://github.com/mobxjs/mobx)
-* [AccurApp](https://github.com/accurat/accurapp)
+- [BlockCypher](https://www.blockcypher.com/)
+- [React](https://facebook.github.io/react/)
+- [D3](https://d3js.org/)
+- [MobX](https://github.com/mobxjs/mobx)
+- [AccurApp](https://github.com/accurat/accurapp)

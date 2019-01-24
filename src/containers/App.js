@@ -131,7 +131,7 @@ export default class App extends React.Component {
           </svg>
           <div>{tooltips}</div>
           <a
-            href="https://github.com/lucafalasco/cryptiz"
+            href="https://github.com/lucafalasco/cyt"
             target="_blank"
             rel="noopener noreferrer"
           >
